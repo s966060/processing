@@ -2,24 +2,24 @@ package fde.processing.koch_snowflake;
 
 import processing.core.PApplet;
 
-public class KochSnowFlakeTranslate
+public class KochSnowFlakePassiveTransformation
         extends PApplet {
 
     public void settings() {
-        setSize(1000, 1000);
+        setSize(600, 600);
     }
 
     public void setup() {
         int level = 4;
         float lineLength = 400;
-        float x = 300;
+        float x = 150;
         float y = 150;
 
         pushMatrix();
         translate(x, y);
-        stroke(0, 255, 0);
+        stroke(0x00FF00);
         g(1, lineLength);
-        stroke(0, 0, 255);
+        stroke(0x0000FF);
         g(level, lineLength);
         popMatrix();
 
@@ -27,9 +27,9 @@ public class KochSnowFlakeTranslate
         translate(x, y);
         translate(lineLength, 0);
         rotate(radians(120));
-        stroke(0, 255, 0);
+        stroke(0x00FF00);
         g(1, lineLength);
-        stroke(0, 0, 255);
+        stroke(0x0000FF);
         g(level, lineLength);
         popMatrix();
 
@@ -39,9 +39,9 @@ public class KochSnowFlakeTranslate
         rotate(radians(120));
         translate(lineLength, 0);
         rotate(radians(120));
-        stroke(0, 255, 0);
+        stroke(0x00FF00);
         g(1, lineLength);
-        stroke(0, 0, 255);
+        stroke(0x0000FF);
         g(level, lineLength);
         popMatrix();
     }
@@ -76,6 +76,6 @@ public class KochSnowFlakeTranslate
     }
 
     public static void main(String[] args) {
-        PApplet.main(KochSnowFlakeTranslate.class);
+        PApplet.main(KochSnowFlakePassiveTransformation.class);
     }
 }
