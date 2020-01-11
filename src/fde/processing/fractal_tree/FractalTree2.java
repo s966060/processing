@@ -13,7 +13,7 @@ public class FractalTree2 extends ProcessingOutline {
 
     @Override
     public void setup() {
-        int level = 5;
+        int level = 8;
 
         int x = 500;
         int y = 800;
