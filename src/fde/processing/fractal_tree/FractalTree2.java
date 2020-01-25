@@ -3,7 +3,11 @@ package fde.processing.fractal_tree;
 import fde.processing.common.ProcessingOutline;
 import processing.core.PApplet;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public class FractalTree2 extends ProcessingOutline {
     @Override
@@ -13,12 +17,12 @@ public class FractalTree2 extends ProcessingOutline {
 
     @Override
     public void setup() {
-        int level = 8;
+        int level = 6;
 
         int x = 500;
         int y = 800;
 
-        int length = 600;
+        int length = 400;
 
         translate(x, y);
         rotate(radians(180));
@@ -38,54 +42,65 @@ public class FractalTree2 extends ProcessingOutline {
             this.color = color;
         }
 
-        public float lengthRatio(float trunkRatio) {
-            float branchRatio = this.lengthRatio * trunkRatio;
-            return branchRatio;
+        public float branchLength(float trunkLength) {
+            float branchLength = this.lengthRatio * trunkLength;
+            return branchLength;
         }
 
         public void color(PApplet applet) {
-            // int colorValue = applet.color(this.color.getRed(), this.color.getGreen(), this.color.getBlue());
             applet.stroke(this.color.getRGB());
         }
     }
 
-    static class Config {
-        final X left;
-        final X mid;
-        final X right;
+    static class XList implements Iterable<X> {
+        private final List<X> list;
 
-        public Config(X left, X mid, X right) {
-            this.left = left;
-            this.mid = mid;
-            this.right = right;
+        public XList(X... x) {
+            this.list = new ArrayList<>();
+            this.list.addAll(Arrays.asList(x));
+        }
+
+        public float trunkLength(float trunkLength) {
+            float maxLengthRatio = 0.0f;
+
+            for (X x : this) {
+                maxLengthRatio = Math.max(maxLengthRatio, x.lengthRatio);
+            }
+
+            return trunkLength * maxLengthRatio;
+        }
+
+        @Override
+        public Iterator<FractalTree2.X> iterator() {
+            return this.list.iterator();
         }
     }
 
-    final static Config CONFIG = new Config
-            (
-            new X(0.3f, -30f,   Color.RED),
-            new X(0.0f, +0.0f,  Color.GREEN),
-            new X(0.5f, +15f,   Color.BLUE)
-            );
+    final static XList X_LIST = new XList(
+            new X(0.3f, -60.0f, Color.RED),
+            new X(0.7f, -15.0f, Color.GREEN),
+            new X(0.7f, +15.0f, Color.PINK),
+            new X(0.5f, +45.0f, Color.BLUE)
+    );
 
     void f(int level, float trunkLength) {
         if (level <= 0) {
             return;
         }
 
-        CONFIG.mid.color(this);
-        line(0, 0, 0, trunkLength);
+        stroke(Color.BLACK.getRGB());
+        line(0, 0, 0, X_LIST.trunkLength(trunkLength));
 
-        g(level, trunkLength, CONFIG.left);
-        g(level, trunkLength, CONFIG.mid);
-        g(level, trunkLength, CONFIG.right);
+        for (X x : X_LIST) {
+            g(level, trunkLength, x);
+        }
     }
 
     private void g(int level, float trunkLength, X x) {
         pushMatrix();
-        float branchLength = x.lengthRatio(trunkLength);
-
+        float branchLength = x.branchLength(trunkLength);
         x.color(this);
+
         translate(0, branchLength);
         rotate(radians(x.angle));
 
